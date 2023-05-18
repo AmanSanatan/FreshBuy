@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%=rproduct.name %>
+    </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/stylesheets/stars.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+    <link href="/public/stylesheets/navbar.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/public/stylesheets/products_desc.css">
+</head>
+
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container-fluid">
+        <div class="row mt-5 me-3">
+            <div class="col-12 col-md-4 offset-md-2">
+                <img src="<%=rproduct.image%>" class="img-fluid" alt="">
+            </div>
+            <div class="col-12 col-md-4">
+                <h1>
+                    <%= rproduct.name %>
+                </h1>
+                <hr>
+                <p>
+                    <% if(rproduct.reviews.length>1){ %>
+                    <a href="#reviewhead">
+                        <%=rproduct.avgrating %> <span class="star">&bigstar;</span>
+                    </a>
+                    &ensp;<a href="#reviewhead"><small>
+                            <%=rproduct.reviews.length %> reviews
+                        </small></a>
+                    <% }else if(rproduct.reviews.length){ %>
+                    <a href="#reviewhead">
+                        <%=rproduct.avgrating %> <span class="star">&bigstar;</span>
+                    </a>
+                    &ensp;<a href="#reviewhead"><small>
+                            <%=rproduct.reviews.length %> review
+                        </small></a>
+                    <% }else{ %>
+                    Unrated &ensp;<small>No reviews yet</small>
+                    <% } %>
+                </p>
+                <p>
+                    <b>
+                        Rs. <%=rproduct.price %>
+                    </b>
+                </p>
+                <p>
+                    Sold by: <%=rproduct.author.username%>
+                </p>
+
+                <div>
+                    <%if(currentUser && rproduct.author.equals(currentUser._id)){%>
+                    <form action="/products/<%=rproduct._id%>/update" method="get" class="d-inline">
+                        <button class="btn btn-outline-secondary">Update</button>
+                    </form>
+                    <form action="/products/<%=rproduct._id%>?_method=DELETE" method="post" class="d-inline">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                    <form action="/products/<%=rproduct._id%>/vieworders" method="get" class="d-inline">
+                        <button class="btn btn-outline-secondary">View Inventory</button>
+                    </form>
+                    <%}%>
+                    </div>
+
+                    <%if((!currentUser || (currentUser && ! rproduct.author.equals(currentUser._id))) && rproduct.available){%>
+                    <div>
+                        <form action="/orders/addtocart/<%=rproduct._id%>" method="post">
+                            <p class="card-text">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button type="button" id="minusbtn" class="btn btn-outline-secondary">-</button>
+                                    </div>
+                                    <input type="text" id="quantity" name="quantity" class="form-control d-inline"
+                                        value="1">
+                                    <div class="input-group-append">
+                                        <button id="plusbtn" class="btn btn-outline-secondary" type="button">+</button>
+                                    </div>
+                                </div>
+                            </p>
+                            <script>
+                                let pbtn = document.getElementById("plusbtn");
+                                let mnbtn = document.getElementById("minusbtn");
+                                pbtn.onclick = function () {
+                                    myFunction()
+                                };
+
+                                function myFunction() {
+                                    let val = parseInt(document.getElementById("quantity").value);
+                                    val++;
+                                    document.getElementById("quantity").value = val;
+                                }
+                                mnbtn.onclick = function () {
+                                    myFunction1()
+                                };
+
+                                function myFunction1() {
+                                    let val = parseInt(document.getElementById("quantity").value);
+                                    if (val > 0)
+                                        val--;
+                                    document.getElementById("quantity").value = val;
+                                }
+                            </script>
+
+                            <button name="addtocart" class="btn btn-secondary">Add to Cart</button>
+                        </form>
+                    </div>
+                    <%}%>
+                    <% if((!currentUser||(currentUser&&! rproduct.author.equals(currentUser._id)))&&!rproduct.available){ %>
+                    <p>Currently Unavailable</p>
+                    <% } %>
+                    <br>
+                    <p>
+                        <%=rproduct.description %>
+                    </p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="offset-md-2 col-12 col-md-8">
+
+                    <h2 id="reviewhead">Reviews</h2>
+
+                    <%if(currentUser && ! rproduct.author.equals(currentUser._id)){%>
+                    <form action="/products/<%=rproduct._id%>/newreview" method="post">
+                        <h4>Add a review</h4>
+                        <h5 class="d-inline">Rating: </h5>
+                        <fieldset class="starability-basic">
+
+                            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0"
+                                checked aria-label="No rating." />
+
+                            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
+
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">
+                                <h5>Review description:</h5>
+                            </label>
+                            <textarea class="form-control" name="review[reviewbody]" id="exampleFormControlTextarea1"
+                                rows="3"></textarea>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
+                        </div>
+                        <hr id="hr1">
+                        <br>
+                    </form>
+                    <%}%>
+                            <% if(rproduct.reviews.length){ %>
+                    <% for(rev of rproduct.reviews) {%>
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <p class="starability-result" data-rating="<%= rev.rating %>"></p>
+                            <p class="card-text">
+                                <b>
+                                    <%=rev.author.username%>
+                                </b>
+                                <br>
+                                <%=rev.reviewbody%>
+                            </p>
+                        </div>
+                        <%if(currentUser && rev.author.equals(currentUser._id)){%>
+                        <div class="card-body pt-0">
+                            <form action="/products/<%=rproduct._id%>/reviews/<%= rev._id %>?_method=DELETE"
+                                method="post" class="d-inline">
+                                <div class="text-right">
+                                    <button class="btn btn-danger">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                        <%}%>
+                                    </div>
+                                    <% } %>
+                        <% }else{ %>
+                        <div class="card mt-3 mb-3">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    No reviews yet
+                                    <br>
+                                    <% if(!currentUser) {%>
+                                    <a href="/users/login">Log in</a> to leave a review!
+                                    <% } %>
+                                </p>
+                            </div>
+                        </div>
+                        <% } %>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+            integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous">
+        </script>
+</body>
+
+</html>

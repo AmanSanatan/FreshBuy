@@ -1,0 +1,21 @@
+.main-navbar {
+    background-color: #76323f;
+}
+
+.main-navbar a {
+    color: white;
+}
+
+body {
+    font-family: 'Lora', serif;
+}
+
+.dropdown-menu {
+    background-color: #76323f;
+}
+
+.dropdown-item:hover,
+.dropdown-item:active {
+    background-color: #b86b79;
+    color: white;
+}
