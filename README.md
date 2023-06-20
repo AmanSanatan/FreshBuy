@@ -1,2 +1,2 @@
 # freshBuy
-Web application for buying daily needs items
+MERN stack web application for buying daily needs items
