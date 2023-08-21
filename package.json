@@ -1,5 +1,5 @@
 {
-  "name": "minutemart",
+  "name": "freshBuy",
   "version": "1.0.0",
   "description": "An ecommerce store ",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snipex111/minutemart.git"
+    "url": "https://github.com/AmanSanatan/FreshBuy"
   },
-  "author": "Abhishek Tiwari, Diveesha Deevela",
+  "author": "Aman Sanatan",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/snipex111/minutemart/issues"
+    "url": "https://github.com/AmanSanatan/FreshBuy"
   },
-  "homepage": "https://github.com/snipex111/minutemart#readme",
+  "homepage": "https://github.com/AmanSanatan/FreshBuy",
   "engines":{
     "node" : "16.15.1"
   },
